@@ -5,7 +5,7 @@ import seaborn as sns
 import matplotlib.pyplot as plt
  
 empty = []
-cols = ["100", "500", "1000", "5000", "7000", "10000", "15000"]
+cols = ["100", "1000", "10000", "100000", "1000000", "10000000"]
 arr = [int(x) for x in cols]
 for i in range(len(arr)):
    pin = 0
