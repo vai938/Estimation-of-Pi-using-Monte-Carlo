@@ -1,24 +1,29 @@
 import random
-import matplotlib.pyplot as plt
 import pandas as pd
-master = []
-for i in range(1000):
+import numpy as np
+import seaborn as sns
+import matplotlib.pyplot as plt
+ 
+empty = []
+cols = ["100", "1000", "10000", "100000", "1000000", "10000000"]
+arr = [int(x) for x in cols]
+for i in range(len(arr)):
    pin = 0
    ptot = 0
-   for j in range(1000):
-       x = random.random()
-       y = random.random()
-       z = random.random()
-       if (x*x + y*y + z*z)**0.5 <= 1:
+   sample = []
+   for j in range(arr[i]):
+       x = random.uniform(0, 1)
+       y = random.uniform(0, 1)
+       z = random.uniform(0, 1)
+       if (x**2 + y**2 + z**2) <= 1:
            pin += 1
        ptot += 1
-   pi = 6*(float(pin/ptot))
-   master.append(pi)
+       pi = 6 * (pin / ptot)
        sample.append(pi)
    empty.append(sample)
-column = ["min", "max", "mean", "stand-dev", "variance", "skewness", "kurtosis"]
+column = ["min", "max", "mean", "stand-dev", "variance", "skewness", "median"]
 stats_data = pd.DataFrame(data=np.zeros((7, 7)), columns=column, index=arr)
-min, max, mean, stdev, var, skew, kurt = [], [], [], [], [], [], []
+min, max, mean, stdev, var, skew, median = [], [], [], [], [], [], []
 for i in range(len(arr)):
    raw = pd.DataFrame(
        data=empty[i], columns={cols[i]}, index=np.arange(1, len(empty[i]) + 1)
@@ -29,7 +34,7 @@ for i in range(len(arr)):
    stdev.append(raw[str(cols[i])].std())
    var.append(raw[str(cols[i])].var())
    skew.append(raw[str(cols[i])].skew())
-   kurt.append(raw[str(cols[i])].kurtosis())
+   median.append(raw[str(cols[i])].median())
    sns.displot(data=raw, x=str(cols[i]), kind="kde")
    # raw.to_csv(str(cols[i]) + ".csv")
    del raw
@@ -39,6 +44,7 @@ stats_data["mean"] = mean
 stats_data["stand-dev"] = stdev
 stats_data["variance"] = var
 stats_data["skewness"] = skew
-master.sort()
-plt.hist(master,bins=50)
-plt.show()  
+stats_data["median"] = median
+print(stats_data)
+print(len(empty[1]))
+plt.show()
